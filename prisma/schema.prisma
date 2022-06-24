@@ -1,0 +1,72 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model reservaReferenceMp {
+  id              Int    @id @default(autoincrement())
+  reservaId       Int    @unique
+  referenceId     String @unique
+  clientMpId      BigInt
+  collectorId     BigInt
+  statusReference String @default("pending")
+  idTransaccionMp BigInt @default(0)
+}
+
+model reserva {
+  id                          Int            @id @default(autoincrement())
+  tipo                        String
+  importeTotal                Decimal        @default(0)
+  importeTotalNeto            Decimal        @default(0)
+  serviceChargeTotal          Decimal        @default(0)
+  estado                      String
+  boleteria                   String
+  fechaReserva                BigInt
+  fechaFacturacion            BigInt         @default(0)
+  turnoId                     Int            @default(0)
+  clienteDni                  Int
+  clienteNombre               String
+  clienteEmail                String         @default("null")
+  reservaPreferenceMpId       Int
+  eventoId                    Int
+  eventoNombre                String
+  ubicacionEventoId           Int
+  ubicacionEventoEstado       String
+  ubicacionEventoFechaIngreso BigInt
+  sectorEventoDescripcion     String
+  sectorEventoFechaFuncion    BigInt
+  descuentoSectorDescripcion  String
+  devoluciones                devoluciones[]
+}
+
+model securityMercadoPago {
+  id           Int    @id @default(autoincrement())
+  accessToken  String
+  publicKey    String
+  userIdMp     BigInt
+  nombreCuenta String
+  nombre       String
+  eventoId     Int
+}
+
+model usuarios {
+  id           Int            @id @default(autoincrement())
+  username     Int
+  pass         String
+  devoluciones devoluciones[]
+}
+
+model devoluciones {
+  id                 Int      @id @default(autoincrement())
+  reserva            reserva  @relation(fields: [reservaId], references: [id])
+  reservaId          Int
+  motivo             String
+  fechaDevolucion    BigInt
+  usuario            usuarios @relation(fields: [usuarioEncargadoId], references: [id])
+  usuarioEncargadoId Int
+
+}
