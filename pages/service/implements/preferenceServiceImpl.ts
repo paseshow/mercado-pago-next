@@ -1,60 +1,65 @@
 
 import mercadopago from "mercadopago";
-import { CreatePreferencePayload } from "mercadopago/models/preferences/create-payload.model";
+import { DevolucionModel } from "../../dtos/devolucion";
+import { RequestRefounds } from "../../dtos/refounds";
 import { reservaReferenceMpModel } from "../../models/reservaReferenceMp";
-import { ReservaReferenceMpServiceImpl } from "../../repository/implements/ReservaReferenceMpServiceImpl";
-import { ReservaServiceImpl } from "../../repository/implements/ReservaServiceImpl";
+import { DevolucionRepositoryImpl } from "../../repository/implements/devolucionRepositoryImpl";
+import { ReservaReferenceRepositoryImpl } from "../../repository/implements/ReservaReferenceRepositoryImpl";
+import { ReservaRepositoryImpl } from "../../repository/implements/ReservaRepositoryImpl";
 import { SecurityMercadoPagoRepositoryImpl } from "../../repository/implements/SecurityMercadoPagoRepositoryImpl";
-import { ReservaReferenceMp } from "../../repository/reservaReferenceMpService";
-import { Reserva } from "../../repository/reservaService";
+import { ReservaReferenceMp } from "../../repository/reservaReferenceRepository";
+import { Devolucion } from "../devolucionService";
 import { PreferenceMpService } from "../preferenceService";
+import { Reserva } from "../reservaService";
 import { SecurityMercadoPago } from "../securityMercadoPagoService";
+import { DevolucionServiceImpl } from "./devolucionServiceImpl";
 import { HttpPaseshowServiceImpl } from "./httpPaseshowServiceImpl";
+import { ReservaServiceImpl } from "./ReservaServiceImpl";
 
 export class PreferenceServiceImpl implements PreferenceMpService {
 
+    reservaReferenceMpService = new ReservaReferenceMp(new ReservaReferenceRepositoryImpl);
+    securityMercadoPagoService = new SecurityMercadoPago(new SecurityMercadoPagoRepositoryImpl);
+    resevaService = new Reserva(new ReservaServiceImpl(new ReservaRepositoryImpl));
+    devolucionService = new Devolucion(new DevolucionServiceImpl(new DevolucionRepositoryImpl));
+
     constructor(
-        private httpPaseshowServiceImpl: HttpPaseshowServiceImpl,
+        private httpPaseshowServiceImpl: HttpPaseshowServiceImpl
     ) {
     }
 
     async create_preference(reservaId: string, eventoId: number, token: string) {
         let reservaFull: any;
-        await this.httpPaseshowServiceImpl.reservaFull(reservaId, token).then(res => reservaFull = res);
+
+        reservaFull = await this.httpPaseshowServiceImpl.reservaFull(reservaId, token).then(res => reservaFull = res);
 
         if (!!reservaFull) {
-            const reservaReferenceMp = new ReservaReferenceMp(new ReservaReferenceMpServiceImpl);
 
-            let reservaReference = await reservaReferenceMp.findByReservaId(+reservaId);
+            let reservaReference = await this.reservaReferenceMpService.findByReservaId(+reservaId);
 
-            if (!!reservaReference) {
-                const securityMercadoPago = new SecurityMercadoPago(new SecurityMercadoPagoRepositoryImpl)
-                let security = await securityMercadoPago.findByEventoId(eventoId);
+            if (reservaReference == null) {
+                let security: any = await this.securityMercadoPagoService.findByEventoId(eventoId);
 
                 if (!!security) {
                     mercadopago.configurations.setAccessToken(security.accessToken);
-                    mercadopago.preferences.create(this.createPreference(reservaFull, security))
-                        .then(response => {
-                            let saveReservaReference = reservaReferenceMp.save(this.reservaReferenceMp(response.body,+reservaFull.id, "pending"));
+                    let mercadoPagoCreate = await mercadopago.preferences.create(this.createPreference(reservaFull, security));
 
-                            // ACA ----- GENERAR EVENTO A SOCKET.IO
+                    let saveReservaReference = await this.reservaReferenceMpService.save(this.reservaReferenceMp(mercadoPagoCreate.body, +reservaFull.id, "pending"));
+                    // ACA ----- GENERAR EVENTO A SOCKET.IO
 
-                            const reseva = new Reserva(new ReservaServiceImpl);
 
-                            for(let i = 0; i < reservaFull.ubicacionEventoes.length; i++) {
-                                reseva.save(reseva.createReserva(reservaFull, 'P', i, saveReservaReference.id));
-                            }
-
-                            return { id: response.body.id,  publicKey: reservaReference[reservaReference.length -1].publicKey };
-                        });
+                    for (let i = 0; i < reservaFull.ubicacionEventoes.length; i++) {
+                        this.resevaService.save(this.resevaService.createReserva(reservaFull, 'P', i, saveReservaReference.id));
+                    }
+                    return { id: mercadoPagoCreate.body.id, publicKey: security.publicKey };
                 }
             }
         };
     };
 
 
-    createPreference(reserva: any, securityMercadoPago: any) {
-        let preferences: CreatePreferencePayload = {
+    createPreference(reserva: any, securityMercadoPago: any): any {
+        let preferences = {
             // auto_return: "https://api2.test.mercadopago.paseshow.com.ar/notifications/exit",
             items: [
                 {
@@ -74,7 +79,7 @@ export class PreferenceServiceImpl implements PreferenceMpService {
                 "email": reserva.clienteId.email,
                 "phone": {
                     "area_code": "+",
-                    "number": reserva.clienteId.telefono
+                    "number": +reserva.clienteId.telefono
                 },
                 "identification": {
                     "type": "DNI",
@@ -82,7 +87,7 @@ export class PreferenceServiceImpl implements PreferenceMpService {
                 },
                 "address": {
                     "street_name": reserva.clienteId.direccion,
-                    "street_number": '0',
+                    "street_number": 0,
                     "zip_code": reserva.clienteId.cp
                 }
             },
@@ -102,9 +107,56 @@ export class PreferenceServiceImpl implements PreferenceMpService {
         let clientMpId = +preference.client_id;
         let collectorId = +preference.collector_id;
         let statusReference = status;
-    
+
         let reservaReferenceMp: reservaReferenceMpModel = { reservaId, referenceId, clientMpId, collectorId, statusReference };
-    
+
         return reservaReferenceMp;
+    };
+
+    refounds(request: RequestRefounds, accessToken: string, reserva: any, reservaReference: any) {
+        mercadopago.configure({ access_token: accessToken });
+
+        if (reserva.importeTotal > request.monto)
+            return this.refundsPartial(request, reserva, reservaReference);
+
+        return this.refundsTotal(request, reservaReference, reserva);
+    };
+
+    async refundsPartial(requestRefounds: RequestRefounds, reserva: any, reservaReference: any) {
+        let montoRestante = reserva.monto - requestRefounds.monto;
+        let refound = await mercadopago.payment.refundPartial(
+            {
+                payment_id: requestRefounds.idTransaccion,
+                amount: Number(montoRestante)
+            });
+
+        reserva.monto = montoRestante;
+        await this.resevaService.update(reserva);
+
+        let devolucion: DevolucionModel = {
+            reservaId: reserva.id,
+            motivo: requestRefounds.motivo,
+            usuarioEncargadoId: +requestRefounds.idUser,
+            fechaDevolucion: new Date().getTime(),
+            monto: montoRestante
+        };
+
+        return await this.devolucionService.save(devolucion);
+    };
+
+    async refundsTotal(requestRefounds: RequestRefounds, reservaReference: any, reserva: any) {
+        let refound = await mercadopago.payment.refund(requestRefounds.idTransaccion);
+        reserva.estado = "A";
+        await this.resevaService.update(reserva);
+
+        let devolucion: DevolucionModel = {
+            reservaId: reserva.id,
+            motivo: requestRefounds.motivo,
+            usuarioEncargadoId: +requestRefounds.idUser,
+            fechaDevolucion: new Date().getTime(),
+            monto: requestRefounds.monto
+        };
+
+        return await this.devolucionService.save(devolucion);
     };
 }

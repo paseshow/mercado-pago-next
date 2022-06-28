@@ -12,12 +12,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { query } = req;
     const body = req.body as any;
 
-    if (method == 'GET') {
-        if (query.id && query.token && body.reservaId) {
+    if (query.token) {
 
-            let jsonResponse = await httpPaseshow.create_prefernece(body.reservaId, +query.id, query.token.toString());
-            return res.status(200).json(jsonResponse);
+        if (method == 'POST') {
+            if (query.id && query.token && body.reservaId) {
+                let jsonResponse = await httpPaseshow.create_preference(body.reservaId, +query.id, query.token.toString());
+                return res.json(jsonResponse);
+            }
         }
-    }
-    // res.status(200).json(req.body.reservaId)
+
+        if (method == 'OPTIONS') {
+            return res.json('token');
+        }
+
+    } else return res.status(401).json({});
+
 }

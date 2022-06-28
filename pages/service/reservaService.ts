@@ -1,17 +1,29 @@
 import { ReservaModel } from "../models/reserva";
 
 export interface ReservaService {
+    findByReservaId(reservaId: number): any
+    findByClienteDni(clienteDni: number, reservaId?: number): any
+    findByEstado(estado: string): any
+    update(reserva: any): any;
     save(reserva: ReservaModel): any
-};
+}
 
-export class Reserva {
+export class Reserva  {
 
     constructor(
         private reservaService: ReservaService
-    ) { }
+    ){}
 
-    save(reserva: ReservaModel) {
-        return this.reservaService.save(reserva);
+    findByReservaId(reservaId: number) {
+        return this.reservaService.findByReservaId(reservaId);
+    };
+
+    findByClienteDni(clienteDni: number, reservaId?: number) {
+        return this.reservaService.findByClienteDni(clienteDni, reservaId);
+    };
+
+    findByEstado(estado: string) {
+        return this.reservaService.findByEstado(estado);
     };
 
     createReserva(reservaFull: any, estado: string, indexUbicacion: number, reservaPreferenceMpId: number): ReservaModel {
@@ -24,15 +36,17 @@ export class Reserva {
             estado: estado,
             boleteria: reservaFull.boleteria,
             fechaReserva: reservaFull.fechaReserva,
-            fechaFacturacion: reservaFull.fechaFacturacion,
-            turnoId: null,
-            clienteDni: reservaFull.clienteId.dni,
+            fechaFacturacion: reservaFull.fechaFacturacion ? reservaFull.fechaFacturacion : undefined,
+            turnoId: undefined,
+            clienteDni: +reservaFull.clienteId.dni,
             clienteNombre: reservaFull.clienteId.nombre,
             clienteEmail: reservaFull.clienteId.clienteEmail,
             reservaPreferenceMpId: reservaPreferenceMpId,
             ubicacionEventoId: reservaFull.ubicacionEventoes[indexUbicacion].id,
             ubicacionEventoEstado: reservaFull.ubicacionEventoes[indexUbicacion].estado,
-            ubicacionEventoFechaIngreso: reservaFull.ubicacionEventoes[indexUbicacion].fechaIngreso,
+            ubicacionEventoFechaIngreso: reservaFull.ubicacionEventoes[indexUbicacion].fechaIngreso
+                                        ? reservaFull.ubicacionEventoes[indexUbicacion].fechaIngreso
+                                        : 0,
             sectorEventoDescripcion: reservaFull.ubicacionEventoes[indexUbicacion].sectorEventoId.descripcion,
             sectorEventoFechaFuncion: reservaFull.ubicacionEventoes[indexUbicacion].sectorEventoId.fechaFuncion,
             descuentoSectorDescripcion: reservaFull.ubicacionEventoes[indexUbicacion].descuentoSectorId.descripcion,
@@ -42,4 +56,13 @@ export class Reserva {
 
         return reservaReturn;
     };
-};
+
+    update(reserva: any) {
+        return this.reservaService.update(reserva);
+    };
+
+    save(reserva: ReservaModel) {
+        return this.reservaService.save(reserva);
+    };
+
+}

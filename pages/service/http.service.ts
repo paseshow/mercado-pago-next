@@ -13,4 +13,14 @@ export class HttpService {
                 .then(result => { resolve(result) });
         });
     };
+
+    post(url: string, requestOptions: RequestInit) {
+        requestOptions.method = 'POST';
+
+        return new Promise((resolve, reject) => {
+            fetch(url, requestOptions)
+                .then(eventos => eventos.json())
+                .then(result => { resolve(result) });
+        });
+    };
 }

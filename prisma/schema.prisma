@@ -18,7 +18,7 @@ model reservaReferenceMp {
 }
 
 model reserva {
-  id                          Int            @id @default(autoincrement())
+  id                          Int            @id
   tipo                        String
   importeTotal                Decimal        @default(0)
   importeTotalNeto            Decimal        @default(0)
@@ -47,7 +47,7 @@ model securityMercadoPago {
   id           Int    @id @default(autoincrement())
   accessToken  String
   publicKey    String
-  userIdMp     BigInt
+  userIdMp     String
   nombreCuenta String
   nombre       String
   eventoId     Int
@@ -68,5 +68,5 @@ model devoluciones {
   fechaDevolucion    BigInt
   usuario            usuarios @relation(fields: [usuarioEncargadoId], references: [id])
   usuarioEncargadoId Int
-
+  monto              Decimal
 }

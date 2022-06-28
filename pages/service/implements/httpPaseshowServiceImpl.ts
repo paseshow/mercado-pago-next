@@ -11,23 +11,22 @@ export class HttpPaseshowServiceImpl implements HttpPaseshowService {
         private httpService: HttpService
     ) { }
 
-    login(user: UserLogin, token: string): Promise<Response> {
+    login(user: UserLogin): Promise<any> {
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-
-        myHeaders = this.setHeaders(token, myHeaders);
 
         var urlencoded = new URLSearchParams();
         urlencoded.append("password", user.password);
         urlencoded.append("username", user.username.toString());
 
         var requestOptions: RequestInit = {
-            method: 'POST',
             headers: myHeaders,
             body: urlencoded
         };
 
-        return fetch(this.setUrl('usuarios/authenticate', null, token), requestOptions);
+        return this.httpService.post(this.setUrl('usuarios/authenticate', null, undefined), requestOptions).then( res => {
+            return res;
+        });
     };
 
     async eventos(token: string): Promise<any> {
@@ -54,9 +53,9 @@ export class HttpPaseshowServiceImpl implements HttpPaseshowService {
 
     setUrl(path: string, params: any, token?: string): string {
         let urlReturn = this.urlPaseshow || '';
+        urlReturn = urlReturn.concat(`${path}?`);
 
         if (process.env.IS_PROD == 'false' && token != null) {
-            urlReturn = urlReturn.concat(`${path}?`);
             let urlParams: string = '';
 
             if (!!params) {
