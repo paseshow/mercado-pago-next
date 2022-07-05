@@ -9,17 +9,21 @@ export class HttpService {
 
         return new Promise((resolve, reject) => {
             fetch(url, requestOptions)
-                .then(eventos => eventos.json())
+                .then(result => result.json())
                 .then(result => { resolve(result) });
         });
     };
 
     post(url: string, requestOptions: RequestInit) {
         requestOptions.method = 'POST';
-        
+
         return new Promise((resolve, reject) => {
             fetch(url, requestOptions)
-                .then(result => { resolve(result) });
+                .then(result => result.json())
+                .then(result => {
+                    if (result) resolve(result)
+                    resolve(null)
+                });
         });
     };
 }

@@ -14,6 +14,7 @@ export class HttpPaseshowServiceImpl implements HttpPaseshowService {
     ) { }
 
     login(user: UserLogin): Promise<any> {
+        console.log('init login paseshow.....');
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
@@ -26,30 +27,42 @@ export class HttpPaseshowServiceImpl implements HttpPaseshowService {
             body: urlencoded
         };
 
+        console.log('--> POST: usuarios/authenticate');
         return this.httpService.post(this.setUrl('usuarios/authenticate', null, undefined), requestOptions).then( res => {
+            console.log('--> Response: ' + JSON.stringify(res));
+            console.log('the end login paseshow.....\n');
             return res;
         });
     };
 
     async eventos(token: string): Promise<any> {
+        console.log('init eventoes paseshow.....');
         var myHeaders = new Headers();
         this.setHeaders(token, myHeaders);
 
+        console.log('--> GET: eventoes');
         return this.httpService.get(this.setUrl('eventoes', null, token), myHeaders).then( res => {
+            console.log('--> Response: ' + JSON.stringify(res));
+            console.log('the end eventoes paseshow.....\n');
             return res;
         });
     };
 
     async reservaFull(reservaId: string, token: string): Promise<any> {
+        console.log('init reservafull paseshow.....');
         let myHeaders = new Headers();
         myHeaders = this.setHeaders(token, myHeaders);
 
+        console.log(`--> GET: reservas/${reservaId}/full`);
         return this.httpService.get(this.setUrl(`reservas/${reservaId}/full`, null, token), myHeaders).then( res => {
+            console.log('--> Response: ' + JSON.stringify(res));
+            console.log('the end reservafull paseshow.....\n');
             return res;
         });
     };
 
     async notificationMp(token: string, reserva: ReservaModel) {
+        console.log('init notificationMp paseshow.....');
         var myHeaders = new Headers();
         myHeaders.append('Accept', 'application/json');
         myHeaders = this.setHeaders(token, myHeaders);
@@ -66,7 +79,10 @@ export class HttpPaseshowServiceImpl implements HttpPaseshowService {
             body: JSON.stringify(data)
         };
 
+        console.log('--> POST: reservas/notificacionmp');
         return this.httpService.post(this.setUrl(`reservas/notificacionmp`, null, token), requestOptions).then( res => {
+            console.log('--> Response: ' + JSON.stringify(res));
+            console.log('the end notificationMp paseshow.....\n');
             return res;
         });
     };
