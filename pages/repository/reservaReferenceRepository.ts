@@ -5,6 +5,7 @@ export interface ReservaReferenceRepository {
     save(reservaReferenceMp: reservaReferenceMpModel): any
     findByClienteDni(clienteDni: number): any
     findByTransaccionId(transaccionId: number): any
+    update(reservaReferenceMp: reservaReferenceMpModel): any
 };
 
 export class ReservaReferenceMp {
@@ -27,5 +28,9 @@ export class ReservaReferenceMp {
 
     findByTransaccionId(transaccionId: number) {
         return this.reservaReferenceRpository.findByTransaccionId(transaccionId);
+    };
+
+    update(reservaReferenceMp: reservaReferenceMpModel){
+        return this.reservaReferenceRpository.update(reservaReferenceMp);
     };
 }

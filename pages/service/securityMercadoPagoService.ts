@@ -6,6 +6,9 @@ export interface SecurityMercadoPagoService {
     save(securityMercadoPago: SecurityMercadoPagoModel): any
     update(securityMercadoPago: SecurityMercadoPagoModel): any
     findByEventoIdAndUserId(eventoId: number, userId: number): any
+    findByNombreCuenta(nombreCuenta: string): any;
+    findByUserMpId(userIdMp: string): any;
+    findById(idSecurity: number): any;
 };
 
 export class SecurityMercadoPago {
@@ -27,5 +30,17 @@ export class SecurityMercadoPago {
 
     findByEventoIdAndUserId(eventoId: number, userId: number) {
         return this.securityMercadoPagoService.findByEventoIdAndUserId(eventoId, userId);
+    };
+
+    findByNombreCuenta(nombreCuenta: string) {
+        return this.securityMercadoPagoService.findByNombreCuenta(nombreCuenta);
+    };
+
+    findByUserMpId(userIdMp: string) {
+        return this.securityMercadoPagoService.findByUserMpId(userIdMp);
+    };
+
+    findById(idSecurity: number) {
+        return this.securityMercadoPagoService.findById(idSecurity);
     };
 }

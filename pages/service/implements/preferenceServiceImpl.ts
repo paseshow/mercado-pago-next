@@ -9,6 +9,8 @@ import { ReservaRepositoryImpl } from "../../repository/implements/ReservaReposi
 import { SecurityMercadoPagoRepositoryImpl } from "../../repository/implements/SecurityMercadoPagoRepositoryImpl";
 import { ReservaReferenceMp } from "../../repository/reservaReferenceRepository";
 import { Devolucion } from "../devolucionService";
+import { HttpService } from "../http.service";
+import { HttpPaseshow } from "../httpPaseshowService";
 import { PreferenceMpService } from "../preferenceService";
 import { Reserva } from "../reservaService";
 import { SecurityMercadoPago } from "../securityMercadoPagoService";
@@ -22,6 +24,7 @@ export class PreferenceServiceImpl implements PreferenceMpService {
     securityMercadoPagoService = new SecurityMercadoPago(new SecurityMercadoPagoRepositoryImpl);
     resevaService = new Reserva(new ReservaServiceImpl(new ReservaRepositoryImpl));
     devolucionService = new Devolucion(new DevolucionServiceImpl(new DevolucionRepositoryImpl));
+    httpPaseshowService = new HttpPaseshow(new HttpPaseshowServiceImpl( new HttpService));
 
     constructor(
         private httpPaseshowServiceImpl: HttpPaseshowServiceImpl
@@ -34,17 +37,17 @@ export class PreferenceServiceImpl implements PreferenceMpService {
         reservaFull = await this.httpPaseshowServiceImpl.reservaFull(reservaId, token).then(res => reservaFull = res);
 
         if (!!reservaFull) {
-
             let reservaReference = await this.reservaReferenceMpService.findByReservaId(+reservaId);
 
-            if (reservaReference == null) {
+            if (reservaReference == null || reservaReference.length == 0) {
                 let security: any = await this.securityMercadoPagoService.findByEventoId(eventoId);
 
                 if (!!security) {
+                    console.log('security');
                     mercadopago.configurations.setAccessToken(security.accessToken);
-                    let mercadoPagoCreate = await mercadopago.preferences.create(this.createPreference(reservaFull, security));
+                    let mercadoPagoCreate = await mercadopago.preferences.create(this.createPreference(reservaFull, security, eventoId));
 
-                    let saveReservaReference = await this.reservaReferenceMpService.save(this.reservaReferenceMp(mercadoPagoCreate.body, +reservaFull.id, "pending"));
+                    let saveReservaReference = await this.reservaReferenceMpService.save(this.reservaReferenceMp(mercadoPagoCreate.body, +reservaFull.id, "pending", security));
                     // ACA ----- GENERAR EVENTO A SOCKET.IO
 
 
@@ -58,7 +61,7 @@ export class PreferenceServiceImpl implements PreferenceMpService {
     };
 
 
-    createPreference(reserva: any, securityMercadoPago: any): any {
+    createPreference(reserva: any, securityMercadoPago: any, eventoId: number): any {
         let preferences = {
             // auto_return: "https://api2.test.mercadopago.paseshow.com.ar/notifications/exit",
             items: [
@@ -91,7 +94,7 @@ export class PreferenceServiceImpl implements PreferenceMpService {
                     "zip_code": reserva.clienteId.cp
                 }
             },
-            notification_url: "https://api2.test.mercadopago.paseshow.com.ar/notifications/" + securityMercadoPago.nombreCuenta, // notificaiones para estados de los procesos
+            notification_url: "https://api2.test.mercadopago.paseshow.com.ar/notifications/" + reserva.id.toString(), // notificaiones para estados de los procesos
             statement_descriptor: "PaseShow", //descripcion que aparecera en el resumen de tarjeta del comprador
             external_reference: reserva.id.toString(),
             payment_methods: {
@@ -102,13 +105,13 @@ export class PreferenceServiceImpl implements PreferenceMpService {
         return preferences;
     };
 
-    reservaReferenceMp(preference: any, reservaId: number, status: string) {
+    reservaReferenceMp(preference: any, reservaId: number, status: string, security: any) {
         let referenceId = preference.id.toString();
         let clientMpId = +preference.client_id;
-        let collectorId = +preference.collector_id;
+        let idSecurity = security.id;
         let statusReference = status;
 
-        let reservaReferenceMp: reservaReferenceMpModel = { reservaId, referenceId, clientMpId, collectorId, statusReference };
+        let reservaReferenceMp: reservaReferenceMpModel = { reservaId, referenceId, clientMpId, idSecurity, statusReference };
 
         return reservaReferenceMp;
     };
@@ -158,5 +161,41 @@ export class PreferenceServiceImpl implements PreferenceMpService {
         };
 
         return await this.devolucionService.save(devolucion);
+    };
+
+    async validPreference(token: string, paymentId: number, reservaId: number) {
+        let preferenceByReserva = await this.reservaReferenceMpService.findByReservaId(reservaId);
+        preferenceByReserva = preferenceByReserva[0];
+
+        if(!!preferenceByReserva) {
+
+            let securityMercadoPagoById = await this.securityMercadoPagoService.findById(preferenceByReserva.idSecurity);
+    
+            if(!!securityMercadoPagoById) {
+                await mercadopago.configurations.setAccessToken(securityMercadoPagoById.accessToken);
+                let preferencesFind = await mercadopago.preferences.findById(preferenceByReserva.referenceId);
+                let paymentFindas = await mercadopago.payment.findById(paymentId);
+                let reserva = await this.resevaService.findByReservaId(reservaId);
+
+                if(paymentFindas) {
+                    if(paymentFindas.response.status == 'approved') {
+                        await this.httpPaseshowService.notificationMp(token, reserva);
+
+                        reserva.estado = 'E';
+                        reserva.fechaReserva = BigInt(reserva.fechaReserva); 
+                        reserva.fechaFacturacion = BigInt(new Date().getTime()); 
+                        reserva.ubicacionEventoFechaIngreso = BigInt(0);
+                        reserva.sectorEventoFechaFuncion = BigInt(reserva.sectorEventoFechaFuncion);
+                        await this.resevaService.update(reserva);
+
+                        preferenceByReserva.statusReference = 'approved';
+                        preferenceByReserva.clientMpId = BigInt(preferenceByReserva.clientMpId); 
+                        preferenceByReserva.idTransaccionMp = BigInt(paymentId); 
+                        return await this.reservaReferenceMpService.update(preferenceByReserva);
+                    }
+                };
+            };
+        }
+        return null;
     };
 }

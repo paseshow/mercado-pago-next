@@ -1,5 +1,5 @@
 export interface ReservaModel {
-    id?: number
+    id: number
     tipo: string
     importeTotal: number
     importeTotalNeto: number

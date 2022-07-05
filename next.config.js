@@ -5,6 +5,9 @@
 
 // module.exports = nextConfig
 module.exports = {
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   async headers() {
     return [
       {

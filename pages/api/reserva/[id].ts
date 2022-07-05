@@ -1,10 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { ReservaReferenceMpServiceImpl } from '../../repository/implements/ReservaReferenceRepositoryImpl';
-import { ReservaRepositoryImpl } from '../../repository/implements/ReservaServiceImpl';
-import { ReservaReferenceServiceImpl } from '../../service/implements/reservaReferenceServiceImpl';
+import { ReservaRepositoryImpl } from '../../repository/implements/ReservaRepositoryImpl';
 import { ReservaServiceImpl } from '../../service/implements/ReservaServiceImpl';
 
-import { ReservaReference } from '../../service/reservaReferenceService';
 import { Reserva } from '../../service/reservaService';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {

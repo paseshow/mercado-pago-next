@@ -4,7 +4,7 @@ CREATE TABLE `reservaReferenceMp` (
     `reservaId` INTEGER NOT NULL,
     `referenceId` VARCHAR(191) NOT NULL,
     `clientMpId` BIGINT NOT NULL,
-    `collectorId` BIGINT NOT NULL,
+    `idSecurity` INTEGER NOT NULL,
     `statusReference` VARCHAR(191) NOT NULL DEFAULT 'pending',
     `idTransaccionMp` BIGINT NOT NULL DEFAULT 0,
 
@@ -70,6 +70,7 @@ CREATE TABLE `devoluciones` (
     `motivo` VARCHAR(191) NOT NULL,
     `fechaDevolucion` BIGINT NOT NULL,
     `usuarioEncargadoId` INTEGER NOT NULL,
+    `monto` DECIMAL(65, 30) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

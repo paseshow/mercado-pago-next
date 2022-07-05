@@ -51,7 +51,7 @@ export class Reserva  {
             sectorEventoFechaFuncion: reservaFull.ubicacionEventoes[indexUbicacion].sectorEventoId.fechaFuncion,
             descuentoSectorDescripcion: reservaFull.ubicacionEventoes[indexUbicacion].descuentoSectorId.descripcion,
             eventoId: reservaFull.ubicacionEventoes[indexUbicacion].sectorEventoId.eventoId.id,
-            eventoNombre: reservaFull.ubicacionEventoes[indexUbicacion].sectorEventoId.eventoId.nombre
+            eventoNombre: reservaFull.ubicacionEventoes[indexUbicacion].sectorEventoId.eventoId.nombre,
         };
 
         return reservaReturn;

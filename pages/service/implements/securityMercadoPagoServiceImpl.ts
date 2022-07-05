@@ -23,4 +23,16 @@ export class SecurityMercadoPagoServiceImpl implements SecurityMercadoPagoServic
     findByEventoIdAndUserId(eventoId: number, userId: number) {
         return this.securityRepository.findByEventoIdAndUserId(eventoId, userId);
     };
+
+    findByNombreCuenta(nombreCuenta: string) {
+        return this.securityRepository.findByNombreCuenta(nombreCuenta);
+    };
+
+    findByUserMpId(userIdMp: string) {
+        throw new Error("Method not implemented.");
+    };
+
+    findById(idSecurity: number) {
+        return this.securityRepository.findById(idSecurity);
+    };
 }

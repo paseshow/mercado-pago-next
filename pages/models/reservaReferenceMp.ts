@@ -3,7 +3,7 @@ export interface reservaReferenceMpModel {
     reservaId: number,
     referenceId: string,
     clientMpId: number,
-    collectorId: number,
+    idSecurity: number,
     statusReference: string,
     idTransaccionMp?: number
 }

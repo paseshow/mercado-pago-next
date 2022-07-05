@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { ReservaRepositoryImpl } from '../../repository/implements/ReservaServiceImpl';
+import { ReservaRepositoryImpl } from '../../repository/implements/ReservaRepositoryImpl';
 import { ReservaServiceImpl } from '../../service/implements/ReservaServiceImpl';
 import { Reserva } from '../../service/reservaService';
 

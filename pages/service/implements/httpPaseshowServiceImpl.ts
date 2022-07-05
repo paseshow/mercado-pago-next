@@ -1,11 +1,13 @@
 
 import { UserLogin } from "../../dtos/UserLogin";
+import { ReservaModel } from "../../models/reserva";
 import { HttpService } from "../http.service";
 import { HttpPaseshowService } from "../httpPaseshowService";
 
 export class HttpPaseshowServiceImpl implements HttpPaseshowService {
 
     urlPaseshow = process.env.URL_PASESHOW;
+    isProd = process.env.IS_PROD;
 
     constructor(
         private httpService: HttpService
@@ -39,7 +41,7 @@ export class HttpPaseshowServiceImpl implements HttpPaseshowService {
     };
 
     async reservaFull(reservaId: string, token: string): Promise<any> {
-        var myHeaders = new Headers();
+        let myHeaders = new Headers();
         myHeaders = this.setHeaders(token, myHeaders);
 
         return this.httpService.get(this.setUrl(`reservas/${reservaId}/full`, null, token), myHeaders).then( res => {
@@ -47,8 +49,26 @@ export class HttpPaseshowServiceImpl implements HttpPaseshowService {
         });
     };
 
-    notificationMp(token: string) {
+    async notificationMp(token: string, reserva: ReservaModel) {
+        var myHeaders = new Headers();
+        myHeaders.append('Accept', 'application/json');
+        myHeaders = this.setHeaders(token, myHeaders);
 
+        let data = {
+            id: reserva.id,
+            fecha_notificacion: `${new Date().getTime()}`,
+            estado: 1,
+            importe: +reserva.importeTotal
+        };
+        
+        var requestOptions: RequestInit = {
+            headers: myHeaders,
+            body: JSON.stringify(data)
+        };
+
+        return this.httpService.post(this.setUrl(`reservas/notificacionmp`, null, token), requestOptions).then( res => {
+            return res;
+        });
     };
 
     setUrl(path: string, params: any, token?: string): string {
@@ -71,7 +91,8 @@ export class HttpPaseshowServiceImpl implements HttpPaseshowService {
     };
 
     setHeaders(token: string, headers: Headers): Headers {
-        if (process.env.IS_PROD && token) {
+        if (this.isProd != 'false' && token) {
+            console.log(this.isProd);
             headers.append("X-Auth-Token", token);
             return headers;
         }

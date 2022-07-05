@@ -45,4 +45,34 @@ export class SecurityMercadoPagoRepositoryImpl implements SecurityMercadoPagoRep
 
         return securityMercadoPagoByEventoIdAndUserId[securityMercadoPagoByEventoIdAndUserId.length - 1];
     };
+
+    async findByNombreCuenta(nombreCuenta: string) {
+        let securityMercadoPagoByNombreCuenta = await this.prisma.securityMercadoPago.findMany({
+            where: {
+                nombreCuenta: nombreCuenta
+            }
+        });
+
+        return securityMercadoPagoByNombreCuenta;
+    };
+
+    async findByUserMpId(userIdMp: string) {
+        let securityMercadoPagoByUserIdMp = await this.prisma.securityMercadoPago.findMany({
+            where: {
+                userIdMp: userIdMp
+            }
+        });
+
+        return securityMercadoPagoByUserIdMp;
+    };
+
+    async findById(idSecurity: number) {
+        let securityMercadoPagoById = await this.prisma.securityMercadoPago.findUnique({
+            where: {
+                id: idSecurity
+            }
+        });
+
+        return securityMercadoPagoById;
+    }
 }

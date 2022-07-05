@@ -12,7 +12,7 @@ model reservaReferenceMp {
   reservaId       Int    @unique
   referenceId     String @unique
   clientMpId      BigInt
-  collectorId     BigInt
+  idSecurity      Int
   statusReference String @default("pending")
   idTransaccionMp BigInt @default(0)
 }

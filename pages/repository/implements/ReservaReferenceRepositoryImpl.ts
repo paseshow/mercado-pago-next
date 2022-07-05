@@ -36,4 +36,16 @@ export class ReservaReferenceRepositoryImpl implements ReservaReferenceRepositor
 
         return JSON.parse(JSON.stringify( reservaReferenceByTrasanccionId, (key, value) => (typeof value === 'bigint' ? value.toString() : value)));
     };
+
+    async update(reservaReferenceMp: reservaReferenceMpModel) {
+        let update = await this.prisma.reservaReferenceMp.update({
+            where: {
+                id: reservaReferenceMp.id
+            },
+            data: {
+                ...reservaReferenceMp
+            }
+        });
+        return update;
+    };
 }
