@@ -108,7 +108,6 @@ export class HttpPaseshowServiceImpl implements HttpPaseshowService {
 
     setHeaders(token: string, headers: Headers): Headers {
         if (this.isProd != 'false' && token) {
-            console.log(this.isProd);
             headers.append("X-Auth-Token", token);
             return headers;
         }

@@ -18,8 +18,8 @@ export class ReservaRepositoryImpl implements ReservaRepository {
     };
 
     async findByReservaId(reservaId: number) {
-        let findReservaId = await this.prisma.reserva.findUnique({
-            where: { id: reservaId }
+        let findReservaId = await this.prisma.reserva.findMany({
+            where: { id: +reservaId }
         });
 
         return JSON.parse(JSON.stringify( findReservaId, (key, value) => (typeof value === 'bigint' ? value.toString() : value)));;

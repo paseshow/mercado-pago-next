@@ -24,7 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
             if (type == 'payment' && id != null) {
                 await preferenceMercadoPagoService.validPreference(query.token.toString(), +id, +query.reservaId)
-                return res.status(200).json('');
+                return res.status(200).json(null);
             }
 
             if (type == 'chargebacks') {

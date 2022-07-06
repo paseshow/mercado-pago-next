@@ -18,10 +18,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             if (query.id) {
 
                 if (!!body.clienteDni) {
-                    console.log(query.id);
                     return res.json(await reservaService.findByClienteDni(+body.clienteDni, +query.id));
                 }
-                console.log(query.id);
                 return res.json(await reservaService.findByReservaId(+query.id));
             }
         }

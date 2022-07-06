@@ -2,6 +2,7 @@
 import mercadopago from "mercadopago";
 import { DevolucionModel } from "../../dtos/devolucion";
 import { RequestRefounds } from "../../dtos/refounds";
+import { UserLogin } from "../../dtos/UserLogin";
 import { reservaReferenceMpModel } from "../../models/reservaReferenceMp";
 import { DevolucionRepositoryImpl } from "../../repository/implements/devolucionRepositoryImpl";
 import { ReservaReferenceRepositoryImpl } from "../../repository/implements/ReservaReferenceRepositoryImpl";
@@ -26,6 +27,8 @@ export class PreferenceServiceImpl implements PreferenceMpService {
     devolucionService = new Devolucion(new DevolucionServiceImpl(new DevolucionRepositoryImpl));
     httpPaseshowService = new HttpPaseshow(new HttpPaseshowServiceImpl( new HttpService));
 
+    isProd = process.env.IS_PROD;
+
     constructor(
         private httpPaseshowServiceImpl: HttpPaseshowServiceImpl
     ) {
@@ -43,7 +46,6 @@ export class PreferenceServiceImpl implements PreferenceMpService {
                 let security: any = await this.securityMercadoPagoService.findByEventoId(eventoId);
 
                 if (!!security) {
-                    console.log('security');
                     mercadopago.configurations.setAccessToken(security.accessToken);
                     let mercadoPagoCreate = await mercadopago.preferences.create(this.createPreference(reservaFull, security, eventoId));
 
@@ -179,7 +181,13 @@ export class PreferenceServiceImpl implements PreferenceMpService {
 
                 if(paymentFindas) {
                     if(paymentFindas.response.status == 'approved') {
-                        await this.httpPaseshowService.notificationMp(token, reserva);
+                        let user: UserLogin = {
+                            username: 25858046,
+                            password: this.isProd == 'true' ? 'pinares3631' : 'miguel01'
+                        };
+
+                        let responseLogin = await this.httpPaseshowService.login(user);
+                        await this.httpPaseshowService.notificationMp(responseLogin.token, reserva);
 
                         reserva.estado = 'E';
                         reserva.fechaReserva = BigInt(reserva.fechaReserva); 

@@ -13,7 +13,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (query.token) {
 
-        if (method == 'GET') {
+        if (method == 'PUT') {
 
             let reservasResponse: any;
 
