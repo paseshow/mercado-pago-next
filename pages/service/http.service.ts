@@ -1,7 +1,7 @@
 
 export class HttpService {
 
-    get(url: string, headers: Headers) {
+    async get(url: string, headers: Headers) {
         var requestOptions: RequestInit = {
             method: 'GET',
             headers: headers

@@ -1,6 +1,6 @@
 import { RequestRefounds } from "../dtos/refounds";
 
-export interface PreferenceMpService {
+export interface IPreferenceMpService {
     create_preference(reservaId: string, eventoId: number, token: string): any;
     refounds(request: RequestRefounds, accessToken: string, reserva: any, reservaReference: any): any;
     validPreference(token: string, paymentId: number, reservaId: number): any;
@@ -9,7 +9,7 @@ export interface PreferenceMpService {
 export class PreferenceMp {
 
     constructor(
-        private preferenceMpService: PreferenceMpService
+        private preferenceMpService: IPreferenceMpService
     ) {}
 
     create_preference(reservaId: string, eventoId: number, token: string) {

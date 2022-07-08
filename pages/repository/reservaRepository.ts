@@ -7,15 +7,3 @@ export interface ReservaRepository {
     findByEstado(estado: string): any
     update(reserva: any): any;
 };
-
-export class Reserva {
-
-    constructor(
-        private reservaRepository: ReservaRepository
-    ) { }
-
-    save(reserva: ReservaModel) {
-        return this.reservaRepository.save(reserva);
-    };
-
-};
