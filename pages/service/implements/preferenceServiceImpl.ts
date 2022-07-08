@@ -8,20 +8,21 @@ import { DevolucionRepositoryImpl } from "../../repository/implements/devolucion
 import { ReservaReferenceRepositoryImpl } from "../../repository/implements/ReservaReferenceRepositoryImpl";
 import { ReservaRepositoryImpl } from "../../repository/implements/ReservaRepositoryImpl";
 import { SecurityMercadoPagoRepositoryImpl } from "../../repository/implements/SecurityMercadoPagoRepositoryImpl";
-import { ReservaReferenceMp } from "../../repository/reservaReferenceRepository";
 import { Devolucion } from "../devolucionService";
 import { HttpService } from "../http.service";
 import { HttpPaseshow } from "../httpPaseshowService";
 import { IPreferenceMpService } from "../preferenceService";
+import { ReservaReference } from "../reservaReferenceService";
 import { Reserva } from "../reservaService";
 import { SecurityMercadoPago } from "../securityMercadoPagoService";
 import { DevolucionServiceImpl } from "./devolucionServiceImpl";
 import { HttpPaseshowServiceImpl } from "./httpPaseshowServiceImpl";
+import { ReservaReferenceServiceImpl } from "./reservaReferenceServiceImpl";
 import { ReservaServiceImpl } from "./ReservaServiceImpl";
 
 export class PreferenceServiceImpl implements IPreferenceMpService {
 
-    reservaReferenceMpService = new ReservaReferenceMp(new ReservaReferenceRepositoryImpl);
+    reservaReferenceMpService = new ReservaReference(new ReservaReferenceServiceImpl( new ReservaReferenceRepositoryImpl));
     securityMercadoPagoService = new SecurityMercadoPago(new SecurityMercadoPagoRepositoryImpl);
     resevaService = new Reserva(new ReservaServiceImpl(new ReservaRepositoryImpl));
     devolucionService = new Devolucion(new DevolucionServiceImpl(new DevolucionRepositoryImpl));
