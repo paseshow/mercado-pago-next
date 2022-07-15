@@ -12,7 +12,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { query } = req;
 
     if (method == 'GET') {
-        if(query.reservaId && query.token) {
+        if(query.reservaId) {
 
             let type = null;
             let id = null;

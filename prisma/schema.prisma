@@ -51,6 +51,7 @@ model securityMercadoPago {
   nombreCuenta String
   nombre       String
   eventoId     Int
+  maxCuotas    Int
 }
 
 model usuarios {

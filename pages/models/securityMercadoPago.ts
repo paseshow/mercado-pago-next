@@ -6,4 +6,5 @@ export interface SecurityMercadoPagoModel {
     nombreCuenta: string
     nombre: string
     eventoId: number
+    maxCuotas: number
 }

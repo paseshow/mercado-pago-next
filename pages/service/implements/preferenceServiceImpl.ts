@@ -99,10 +99,11 @@ export class PreferenceServiceImpl implements IPreferenceMpService {
             statement_descriptor: "PaseShow", //descripcion que aparecera en el resumen de tarjeta del comprador
             external_reference: reserva.id.toString(),
             payment_methods: {
-                "installments": securityMercadoPago.maximoCuotas
+                "installments": securityMercadoPago.maxCuotas
             }
         };
 
+        console.log(preferences);
         return preferences;
     };
 
@@ -167,6 +168,7 @@ export class PreferenceServiceImpl implements IPreferenceMpService {
                 let preferencesFind = await mercadopago.preferences.findById(preferenceByReserva.referenceId);
                 let paymentFindas = await mercadopago.payment.findById(paymentId);
                 let reserva = await this.resevaService.findByReservaId(reservaId);
+                reserva = reserva[0];
 
                 if (paymentFindas) {
                     if (paymentFindas.response.status == 'approved') {
