@@ -73,9 +73,9 @@ export class PreferenceServiceImpl implements IPreferenceMpService {
                 }
             ],
             back_urls: {
-                "success": "https://api2.test.mercadopago.paseshow.com.ar/notifications/exit",
-                "failure": "https://api2.test.mercadopago.paseshow.com.ar/notifications/fail",
-                "pending": "https://api2.test.mercadopago.paseshow.com.ar/notifications/pending"
+                "success": "https://api2.test.mercadopago.paseshow.com.ar/api/notifications/exit",
+                "failure": "https://api2.test.mercadopago.paseshow.com.ar/api/notifications/fail",
+                "pending": "https://api2.test.mercadopago.paseshow.com.ar/api/notifications/pending"
             },
             payer: {
                 "name": reserva.clienteId.nombre,
@@ -95,7 +95,7 @@ export class PreferenceServiceImpl implements IPreferenceMpService {
                     "zip_code": reserva.clienteId.cp
                 }
             },
-            notification_url: "https://api2.test.mercadopago.paseshow.com.ar/notifications/" + reserva.id.toString(), // notificaiones para estados de los procesos
+            notification_url: "https://api2.test.mercadopago.paseshow.com.ar/api/notifications/" + reserva.id.toString(), // notificaiones para estados de los procesos
             statement_descriptor: "PaseShow", //descripcion que aparecera en el resumen de tarjeta del comprador
             external_reference: reserva.id.toString(),
             payment_methods: {
