@@ -1,10 +1,10 @@
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "../../index";
 import { SecurityMercadoPagoModel } from "../../models/securityMercadoPago";
 import { SecurityMercadoPagoReposiroty } from "../securityMercadoPagoRepository";
 
 export class SecurityMercadoPagoRepositoryImpl implements SecurityMercadoPagoReposiroty {
 
-    prisma = new PrismaClient();
+    prisma = prisma;
 
     async findByEventoId(eventoId: number) {
 

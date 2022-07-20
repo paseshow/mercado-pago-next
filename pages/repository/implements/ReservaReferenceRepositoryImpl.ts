@@ -1,11 +1,11 @@
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "../../index";
 import { reservaReferenceMpModel } from "../../models/reservaReferenceMp";
 import { ReservaReferenceRepository } from "../reservaReferenceRepository";
 
 
 export class ReservaReferenceRepositoryImpl implements ReservaReferenceRepository {
 
-    prisma = new PrismaClient();
+    prisma = prisma;
 
     async findByReservaId(reservaId: number) {
 

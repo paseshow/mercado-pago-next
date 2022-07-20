@@ -1,10 +1,10 @@
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "../../index";
 import { ReservaModel } from "../../models/reserva";
 import { ReservaRepository } from "../reservaRepository";
 
 export class ReservaRepositoryImpl implements ReservaRepository {
 
-    prisma = new PrismaClient();
+    prisma = prisma;
 
     async save(reserva: ReservaModel) {
 
