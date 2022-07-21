@@ -1,14 +1,12 @@
-import { prisma } from "../../index";
+import { prisma } from "../../configDataBase";
 import { ReservaModel } from "../../models/reserva";
 import { ReservaRepository } from "../reservaRepository";
 
 export class ReservaRepositoryImpl implements ReservaRepository {
 
-    prisma = prisma;
-
     async save(reserva: ReservaModel) {
 
-        let save = await this.prisma.reserva.create({
+        let save = await prisma.reserva.create({
             data: {
                 ...reserva,
                 devoluciones: undefined
@@ -18,7 +16,7 @@ export class ReservaRepositoryImpl implements ReservaRepository {
     };
 
     async findByReservaId(reservaId: number) {
-        let findReservaId = await this.prisma.reserva.findMany({
+        let findReservaId = await prisma.reserva.findMany({
             where: { id: +reservaId }
         });
 
@@ -26,7 +24,7 @@ export class ReservaRepositoryImpl implements ReservaRepository {
     };
 
     async findByClienteDni(clienteDni: number, reservaId?: number) {
-        let findClienteDni = await this.prisma.reserva.findMany({
+        let findClienteDni = await prisma.reserva.findMany({
             where: { clienteDni: clienteDni }
         });
 
@@ -39,7 +37,7 @@ export class ReservaRepositoryImpl implements ReservaRepository {
     };
 
     async findByEstado(estado: string) {
-        let findEstado = await this.prisma.reserva.findMany({
+        let findEstado = await prisma.reserva.findMany({
             where: { estado: estado }
         });
 
@@ -47,7 +45,7 @@ export class ReservaRepositoryImpl implements ReservaRepository {
     };
 
     async update(reserva: any) {
-        let save = await this.prisma.reserva.update({
+        let save = await prisma.reserva.update({
             where: {
                 id: reserva.id
             },

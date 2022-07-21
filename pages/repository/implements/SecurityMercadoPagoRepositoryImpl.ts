@@ -1,21 +1,19 @@
-import { prisma } from "../../index";
+import { prisma } from "../../configDataBase";
 import { SecurityMercadoPagoModel } from "../../models/securityMercadoPago";
 import { SecurityMercadoPagoReposiroty } from "../securityMercadoPagoRepository";
 
 export class SecurityMercadoPagoRepositoryImpl implements SecurityMercadoPagoReposiroty {
 
-    prisma = prisma;
-
     async findByEventoId(eventoId: number) {
 
-        let securityMercadoPago = await this.prisma.securityMercadoPago.findMany({
+        let securityMercadoPago = await prisma.securityMercadoPago.findMany({
             where: { eventoId: eventoId }
         });
         return securityMercadoPago[securityMercadoPago.length - 1];
     };
 
     async save(securityMercadoPago: SecurityMercadoPagoModel) {
-        let save = await this.prisma.securityMercadoPago.create({
+        let save = await prisma.securityMercadoPago.create({
             data: {
                 ...securityMercadoPago
             }
@@ -24,7 +22,7 @@ export class SecurityMercadoPagoRepositoryImpl implements SecurityMercadoPagoRep
     };
 
     async update(securityMercadoPago: SecurityMercadoPagoModel) {
-        let save = await this.prisma.securityMercadoPago.update({
+        let save = await prisma.securityMercadoPago.update({
             where: {
                 id: securityMercadoPago.id
             },
@@ -36,7 +34,7 @@ export class SecurityMercadoPagoRepositoryImpl implements SecurityMercadoPagoRep
     };
 
     async findByEventoIdAndUserId(eventoId: number, userId: number) {
-        let securityMercadoPagoByEventoIdAndUserId = await this.prisma.securityMercadoPago.findMany({
+        let securityMercadoPagoByEventoIdAndUserId = await prisma.securityMercadoPago.findMany({
             where: {
                 eventoId: eventoId,
                 userIdMp: userId.toString()
@@ -47,7 +45,7 @@ export class SecurityMercadoPagoRepositoryImpl implements SecurityMercadoPagoRep
     };
 
     async findByNombreCuenta(nombreCuenta: string) {
-        let securityMercadoPagoByNombreCuenta = await this.prisma.securityMercadoPago.findMany({
+        let securityMercadoPagoByNombreCuenta = await prisma.securityMercadoPago.findMany({
             where: {
                 nombreCuenta: nombreCuenta
             }
@@ -57,7 +55,7 @@ export class SecurityMercadoPagoRepositoryImpl implements SecurityMercadoPagoRep
     };
 
     async findByUserMpId(userIdMp: string) {
-        let securityMercadoPagoByUserIdMp = await this.prisma.securityMercadoPago.findMany({
+        let securityMercadoPagoByUserIdMp = await prisma.securityMercadoPago.findMany({
             where: {
                 userIdMp: userIdMp
             }
@@ -67,7 +65,7 @@ export class SecurityMercadoPagoRepositoryImpl implements SecurityMercadoPagoRep
     };
 
     async findById(idSecurity: number) {
-        let securityMercadoPagoById = await this.prisma.securityMercadoPago.findUnique({
+        let securityMercadoPagoById = await prisma.securityMercadoPago.findUnique({
             where: {
                 id: idSecurity
             }
