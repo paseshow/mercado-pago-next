@@ -1,15 +1,13 @@
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "../../configDataBase";
 import { reservaReferenceMpModel } from "../../models/reservaReferenceMp";
 import { ReservaReferenceRepository } from "../reservaReferenceRepository";
 
 
 export class ReservaReferenceRepositoryImpl implements ReservaReferenceRepository {
 
-    prisma = new PrismaClient();
-
     async findByReservaId(reservaId: number) {
 
-        const reservaReferenceByReservaId = await this.prisma.reservaReferenceMp.findMany({
+        const reservaReferenceByReservaId = await prisma.reservaReferenceMp.findMany({
             where: { reservaId: reservaId }
         });
         
@@ -17,7 +15,7 @@ export class ReservaReferenceRepositoryImpl implements ReservaReferenceRepositor
     };
 
     async save(reservaReferenceMp: reservaReferenceMpModel) {
-        let save = await this.prisma.reservaReferenceMp.create({
+        let save = await prisma.reservaReferenceMp.create({
             data: {
                 ...reservaReferenceMp
             }
@@ -30,7 +28,7 @@ export class ReservaReferenceRepositoryImpl implements ReservaReferenceRepositor
     };
 
     async findByTransaccionId(transaccionId: number) {
-        const reservaReferenceByTrasanccionId = await this.prisma.reservaReferenceMp.findFirst({
+        const reservaReferenceByTrasanccionId = await prisma.reservaReferenceMp.findFirst({
             where: { idTransaccionMp: transaccionId }
         });
 
@@ -38,7 +36,7 @@ export class ReservaReferenceRepositoryImpl implements ReservaReferenceRepositor
     };
 
     async update(reservaReferenceMp: reservaReferenceMpModel) {
-        let update = await this.prisma.reservaReferenceMp.update({
+        let update = await prisma.reservaReferenceMp.update({
             where: {
                 id: reservaReferenceMp.id
             },

@@ -2,9 +2,9 @@
 import { UserLogin } from "../../dtos/UserLogin";
 import { ReservaModel } from "../../models/reserva";
 import { HttpService } from "../http.service";
-import { HttpPaseshowService } from "../httpPaseshowService";
+import { IHttpPaseshowService } from "../httpPaseshowService";
 
-export class HttpPaseshowServiceImpl implements HttpPaseshowService {
+export class HttpPaseshowServiceImpl implements IHttpPaseshowService {
 
     urlPaseshow = process.env.URL_PASESHOW;
     isProd = process.env.IS_PROD;
@@ -107,11 +107,9 @@ export class HttpPaseshowServiceImpl implements HttpPaseshowService {
     };
 
     setHeaders(token: string, headers: Headers): Headers {
-        if (this.isProd != 'false' && token) {
-            console.log(this.isProd);
+        if (this.isProd != 'false' && token)
             headers.append("X-Auth-Token", token);
-            return headers;
-        }
+
         return headers;
     };
 }

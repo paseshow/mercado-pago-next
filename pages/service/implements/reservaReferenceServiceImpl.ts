@@ -1,3 +1,4 @@
+import { reservaReferenceMpModel } from "../../models/reservaReferenceMp";
 import { ReservaReferenceRepository } from "../../repository/reservaReferenceRepository";
 import { ReservaReferenceService } from "../reservaReferenceService";
 
@@ -19,4 +20,11 @@ export class ReservaReferenceServiceImpl implements ReservaReferenceService {
         return this.reservaReferenceRpository.findByTransaccionId(transaccionId);
     };
     
+    save(reservaReferenceMp: reservaReferenceMpModel) {
+        return this.reservaReferenceRpository.save(reservaReferenceMp);
+    };
+
+    update(reservaReferenceMp: reservaReferenceMpModel){
+        return this.reservaReferenceRpository.update(reservaReferenceMp);
+    };
 }

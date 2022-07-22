@@ -50,6 +50,7 @@ CREATE TABLE `securityMercadoPago` (
     `nombreCuenta` VARCHAR(191) NOT NULL,
     `nombre` VARCHAR(191) NOT NULL,
     `eventoId` INTEGER NOT NULL,
+    `maxCuotas` INTEGER NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

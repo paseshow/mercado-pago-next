@@ -1,13 +1,11 @@
-import { PrismaClient } from "@prisma/client";
 import { DevolucionModel } from "../../dtos/devolucion";
 import { DevolucionRepository } from "../devolucionRepository";
+import { prisma } from "../../configDataBase";
 
 export class DevolucionRepositoryImpl implements DevolucionRepository {
 
-    prisma = new PrismaClient();
-
     async save(devolucion: DevolucionModel) {
-        let save = await this.prisma.devoluciones.create({
+        let save = await prisma.devoluciones.create({
             data: {
                 ...devolucion,
             }

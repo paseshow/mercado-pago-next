@@ -1,7 +1,7 @@
 import { UserLogin } from "../dtos/UserLogin";
 import { ReservaModel } from "../models/reserva";
 
-export interface HttpPaseshowService {
+export interface IHttpPaseshowService {
     login(user: UserLogin): any;
     eventos(token: string): any;
     reservaFull(reservaId: string, token: string): any;
@@ -12,7 +12,7 @@ export interface HttpPaseshowService {
 export class HttpPaseshow {
 
     constructor(
-        private httpPaseshowService: HttpPaseshowService
+        private httpPaseshowService: IHttpPaseshowService
     ) {
     }
 
@@ -26,5 +26,5 @@ export class HttpPaseshow {
 
     notificationMp(token: string, reserva: ReservaModel) {
         return this.httpPaseshowService.notificationMp(token, reserva);
-    }
+    };
 }

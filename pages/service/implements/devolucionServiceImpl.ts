@@ -1,8 +1,8 @@
 import { DevolucionModel } from "../../dtos/devolucion";
 import { DevolucionRepository } from "../../repository/devolucionRepository";
-import { DevolucionService } from "../devolucionService";
+import { IDevolucionService } from "../devolucionService";
 
-export class DevolucionServiceImpl implements DevolucionService {
+export class DevolucionServiceImpl implements IDevolucionService {
 
     constructor(
         private devolucionRepository: DevolucionRepository
