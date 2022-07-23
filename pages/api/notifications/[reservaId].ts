@@ -12,16 +12,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { query } = req;
 
     if (method == 'GET') {
+        console.log(`notiifications mp inti: ${req.url}`);
         if(query.reservaId) {
 
             let type = null;
             let id = null;
 
+            console.log(`notiifications mp: ${query.reservaId}`);
             for (let value in query) {
                 if (value == "type" || value == "topic") type = query[value];
-                else if (value.includes("id")) id = query[value];
+                
+                if (value.includes("id")) id = query[value];
             };
 
+            console.log(`type: ${query.reservaId} -- id: ${id}`);
             if (type == 'payment' && id != null) {
                 await preferenceMercadoPagoService.validPreference(query.token.toString(), +id, +query.reservaId)
                 return res.status(200).json(null);
