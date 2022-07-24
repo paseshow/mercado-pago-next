@@ -28,11 +28,11 @@ export class ReservaReferenceRepositoryImpl implements ReservaReferenceRepositor
     };
 
     async findByTransaccionId(transaccionId: number) {
-        const reservaReferenceByTrasanccionId = await prisma.reservaReferenceMp.findFirst({
+        const reservaReferenceByTrasanccionId = await prisma.reservaReferenceMp.findMany({
             where: { idTransaccionMp: transaccionId }
         });
 
-        return JSON.parse(JSON.stringify( reservaReferenceByTrasanccionId, (key, value) => (typeof value === 'bigint' ? value.toString() : value)));
+        return JSON.parse(JSON.stringify( reservaReferenceByTrasanccionId[0], (key, value) => (typeof value === 'bigint' ? value.toString() : value)));
     };
 
     async update(reservaReferenceMp: reservaReferenceMpModel) {
