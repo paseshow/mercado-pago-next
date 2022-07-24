@@ -121,7 +121,7 @@ export class PreferenceServiceImpl implements IPreferenceMpService {
     refounds(request: RequestRefounds, accessToken: string, reserva: any, reservaReference: any) {
         mercadopago.configure({ access_token: accessToken });
 
-        let isPartial = reserva.importeTotal > request.monto;
+        let isPartial = reserva.importeTotal < request.monto;
         console.log(`isPartial: ${isPartial} -- importeTotal: ${reserva.importeTotal} -- monto refound: ${request.monto}`);
         return this.refundsMercadoPago(isPartial, request, reserva)
     };
