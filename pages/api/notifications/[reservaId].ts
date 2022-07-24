@@ -11,7 +11,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { method } = req;
     const { query } = req;
 
-    if (method == 'GET') {
+    if (method == 'POST') {
         console.log(`notiifications mp inti: ${req.url}`);
         if(query.reservaId) {
 
