@@ -155,7 +155,7 @@ export class PreferenceServiceImpl implements IPreferenceMpService {
         return await this.devolucionService.save(devolucion);
     };
 
-    async validPreference(token: string, paymentId: number, reservaId: number) {
+    async validPreference(paymentId: number, reservaId: number) {
         let preferenceByReserva = await this.reservaReferenceMpService.findByReservaId(reservaId);
         preferenceByReserva = preferenceByReserva[0];
 
