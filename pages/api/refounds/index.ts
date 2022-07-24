@@ -38,7 +38,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 let securityMercadoPagoByUserIdAndEventId = await securityMercadoPagoService.findById(reservaReferenceByTrasanccionId.idSecurity);
                 console.log(`securityMercadoPagoByUserIdAndEventId: ${JSON.stringify(securityMercadoPagoByUserIdAndEventId)}`);
 
-                return res.status(200).json( await preferenceMp.refounds(requestRefounds, securityMercadoPagoByUserIdAndEventId.accessToken, reservaByReservaId, reservaReferenceByTrasanccionId));
+                return res.status(200).json( await preferenceMp.refounds(requestRefounds, securityMercadoPagoByUserIdAndEventId.accessToken, reservaByReservaId[0], reservaReferenceByTrasanccionId));
             }
 
 
