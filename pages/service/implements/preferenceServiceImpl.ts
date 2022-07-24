@@ -128,7 +128,7 @@ export class PreferenceServiceImpl implements IPreferenceMpService {
 
     async refundsMercadoPago(isPartial: boolean, requestRefounds: RequestRefounds, reserva: any) {
 
-        if (isPartial) {
+        if (!isPartial) {
             let refound = await mercadopago.payment.refund(requestRefounds.idTransaccion);
             reserva.estado = "A";
 
