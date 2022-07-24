@@ -128,11 +128,14 @@ export class PreferenceServiceImpl implements IPreferenceMpService {
     async refundsMercadoPago(isPartial: boolean, requestRefounds: RequestRefounds, reserva: any) {
 
         if (isPartial) {
+            console.log(`refounds Total`);
             let refound = await mercadopago.payment.refund(requestRefounds.idTransaccion);
             reserva.estado = "A";
 
         } else {
             let montoRestante = reserva.monto - requestRefounds.monto;
+            console.log(`refounds Partial: $ ${montoRestante}`);
+
             let refound = await mercadopago.payment.refundPartial(
                 {
                     payment_id: requestRefounds.idTransaccion,
