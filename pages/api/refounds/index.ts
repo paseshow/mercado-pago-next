@@ -30,7 +30,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         if(!!requestRefounds) {
             
             let reservaReferenceByTrasanccionId = await reservaReferenceService.findByTransaccionId(requestRefounds.idTransaccion);
-            
+            console.log(`reservaReferenceByTrasanccionId: ${JSON.stringify(reservaReferenceByTrasanccionId)}`);
+
             if(!!reservaReferenceByTrasanccionId) {
                 let reservaByReservaId = await reservaService.findByReservaId(+reservaReferenceByTrasanccionId.reservaId);
                 console.log(`reservaByReservaId: ${JSON.stringify(reservaByReservaId)}`);
