@@ -33,10 +33,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             
             if(!!reservaReferenceByTrasanccionId) {
                 let reservaByReservaId = await reservaService.findByReservaId(+reservaReferenceByTrasanccionId.reservaId);
-                console.log(`reservaByReservaId: ${reservaByReservaId}`);
+                console.log(`reservaByReservaId: ${JSON.stringify(reservaByReservaId)}`);
                 let securityMercadoPagoByUserIdAndEventId = await securityMercadoPagoService.findById(reservaReferenceByTrasanccionId.idSecurity);
-                console.log(`securityMercadoPagoByUserIdAndEventId: ${securityMercadoPagoByUserIdAndEventId}`);
-                
+                console.log(`securityMercadoPagoByUserIdAndEventId: ${JSON.stringify(securityMercadoPagoByUserIdAndEventId)}`);
+
                 return res.status(200).json( await preferenceMp.refounds(requestRefounds, securityMercadoPagoByUserIdAndEventId.accessToken, reservaByReservaId, reservaReferenceByTrasanccionId));
             }
 
