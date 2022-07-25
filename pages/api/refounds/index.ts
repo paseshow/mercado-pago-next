@@ -28,7 +28,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         let requestRefounds: RequestRefounds = body;
 
         if(!!requestRefounds) {
-            
             let reservaReferenceByTrasanccionId = await reservaReferenceService.findByTransaccionId(requestRefounds.idTransaccion);
             console.log(`reservaReferenceByTrasanccionId: ${JSON.stringify(reservaReferenceByTrasanccionId)}`);
 

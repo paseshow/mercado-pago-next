@@ -1,7 +1,7 @@
 export interface RequestRefounds {
     eventoId: number,
     idTransaccion: number,
-    idUser: string,
+    idUser: number,
     monto: number,
     motivo: string
 }

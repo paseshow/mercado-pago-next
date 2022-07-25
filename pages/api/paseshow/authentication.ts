@@ -15,6 +15,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         let userLogin = body as UserLogin;
 
         if(userLogin) {
+            if(!userLogin.username.toString().includes("25858046"))
+                return res.status(404);
+
             let token = await httpPaseshow.login(userLogin);
             return res.json(token);
         }

@@ -155,7 +155,7 @@ export class PreferenceServiceImpl implements IPreferenceMpService {
         let devolucion: DevolucionModel = {
             reservaId: reserva.id,
             motivo: requestRefounds.motivo,
-            usuarioEncargadoId: +requestRefounds.idUser,
+            usuarioEncargadoId: requestRefounds.idUser,
             fechaDevolucion: new Date().getTime(),
             monto: requestRefounds.monto
         };
