@@ -22,7 +22,7 @@ import { ReservaServiceImpl } from "./ReservaServiceImpl";
 
 export class PreferenceServiceImpl implements IPreferenceMpService {
 
-    reservaReferenceMpService = new ReservaReference(new ReservaReferenceServiceImpl( new ReservaReferenceRepositoryImpl));
+    reservaReferenceMpService = new ReservaReference(new ReservaReferenceServiceImpl(new ReservaReferenceRepositoryImpl));
     securityMercadoPagoService = new SecurityMercadoPago(new SecurityMercadoPagoRepositoryImpl);
     resevaService = new Reserva(new ReservaServiceImpl(new ReservaRepositoryImpl));
     devolucionService = new Devolucion(new DevolucionServiceImpl(new DevolucionRepositoryImpl));
@@ -131,7 +131,7 @@ export class PreferenceServiceImpl implements IPreferenceMpService {
         if (!isPartial) {
             console.log("refounds Total");
             reserva.estado = "A";
-            await mercadopago.payment.refund(requestRefounds.idTransaccion).then( res => {
+            await mercadopago.payment.refund(requestRefounds.idTransaccion).then(res => {
             });
 
         } else {
@@ -146,6 +146,10 @@ export class PreferenceServiceImpl implements IPreferenceMpService {
             reserva.monto = montoRestante;
         }
 
+        reserva.fechaReserva = BigInt(reserva.fechaReserva);
+        reserva.fechaFacturacion = BigInt(reserva.fechaFacturacion);
+        reserva.ubicacionEventoFechaIngreso = BigInt(0);
+        reserva.sectorEventoFechaFuncion = BigInt(reserva.sectorEventoFechaFuncion);
         await this.resevaService.update(reserva);
 
         let devolucion: DevolucionModel = {
