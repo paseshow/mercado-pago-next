@@ -119,8 +119,7 @@ export class PreferenceServiceImpl implements IPreferenceMpService {
     };
 
     refounds(request: RequestRefounds, accessToken: string, reserva: any, reservaReference: any) {
-        // mercadopago.configure({ access_token: accessToken });
-        mercadopago.configurations.setAccessToken(accessToken);
+        mercadopago.configure({ access_token: accessToken });
 
         let isPartial = request.monto < reserva.importeTotal;
         console.log(`isPartial: ${isPartial} -- importeTotal: ${reserva.importeTotal} -- monto refound: ${request.monto}`);
@@ -131,8 +130,9 @@ export class PreferenceServiceImpl implements IPreferenceMpService {
 
         if (!isPartial) {
             console.log("refounds Total");
-            let refound = await mercadopago.payment.refund(requestRefounds.idTransaccion);
             reserva.estado = "A";
+            await mercadopago.payment.refund(requestRefounds.idTransaccion).then( res => {
+            });
 
         } else {
             let montoRestante = reserva.monto - requestRefounds.monto;
