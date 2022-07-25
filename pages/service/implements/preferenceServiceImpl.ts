@@ -160,7 +160,8 @@ export class PreferenceServiceImpl implements IPreferenceMpService {
             monto: requestRefounds.monto
         };
 
-        return await this.devolucionService.save(devolucion);
+        await this.devolucionService.save(devolucion)
+        return ;
     };
 
     async validPreference(paymentId: number, reservaId: number) {
