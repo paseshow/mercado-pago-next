@@ -58,7 +58,6 @@ model usuarios {
   id           Int            @id @default(autoincrement())
   username     Int
   pass         String
-  devoluciones devoluciones[]
 }
 
 model devoluciones {
@@ -67,7 +66,6 @@ model devoluciones {
   reservaId          Int
   motivo             String
   fechaDevolucion    BigInt
-  usuario            usuarios @relation(fields: [usuarioEncargadoId], references: [id])
   usuarioEncargadoId Int
   monto              Decimal
 }
