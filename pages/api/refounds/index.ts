@@ -26,6 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (method == 'POST') {
         let requestRefounds: RequestRefounds = body;
+        console.log(`requestRefounds: ${JSON.stringify(requestRefounds)}`);
 
         if(!!requestRefounds) {
             let reservaReferenceByTrasanccionId = await reservaReferenceService.findByTransaccionId(requestRefounds.idTransaccion);
