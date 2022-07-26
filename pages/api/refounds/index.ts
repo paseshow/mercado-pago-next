@@ -24,6 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { method } = req;
     const { body } = req;
 
+    console.log(`req: ${req}`)
     if (method == 'POST') {
         let requestRefounds: RequestRefounds = body;
         console.log(`requestRefounds: ${JSON.stringify(requestRefounds)}`);
