@@ -135,7 +135,7 @@ export class PreferenceServiceImpl implements IPreferenceMpService {
             });
 
         } else {
-            let montoRestante = reserva.monto - requestRefounds.monto;
+            let montoRestante = +reserva.monto - +requestRefounds.monto;
             console.log(`refounds partial: $ ${montoRestante}`);
             let refound = await mercadopago.payment.refundPartial(
                 {
