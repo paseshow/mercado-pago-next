@@ -135,15 +135,15 @@ export class PreferenceServiceImpl implements IPreferenceMpService {
             });
 
         } else {
-            let montoRestante = +reserva.monto - +requestRefounds.monto;
-            console.log(`refounds partial: $ ${montoRestante}`);
+            let montoRestante = (+reserva.importeTotal) - requestRefounds.monto;
+            console.log(`refounds partial: $ ${requestRefounds.monto}`);
             let refound = await mercadopago.payment.refundPartial(
                 {
                     payment_id: requestRefounds.idTransaccion,
-                    amount: Number(montoRestante)
+                    amount: Number(requestRefounds.monto)
                 });
 
-            reserva.monto = montoRestante;
+            reserva.importeTotal = montoRestante;
         }
 
         reserva.fechaReserva = BigInt(reserva.fechaReserva);
